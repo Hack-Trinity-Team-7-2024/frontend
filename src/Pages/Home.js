@@ -14,8 +14,8 @@ const Home = () => {
   const addTask = (taskText) => {
     let task = {
       // id: tasks.length + 1,
-      text: taskText,
-      completed: true
+      content: taskText,
+      completed: false
     };
 
     fetch('/api/tasks',
@@ -33,7 +33,8 @@ const Home = () => {
       j => {
         let actualTask = {
           ...task,
-          id: j.id
+          ...j,
+          subTasks: (<code>1. Complete Task<br/>2. Profit</code>) // temporary
         };
         console.log(actualTask);
         setTasks([...tasks, actualTask]);

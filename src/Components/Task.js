@@ -16,7 +16,8 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const Task = ({ title, description, subTasks }) => {
+// const Task = ({ title, description, subTasks }) => {
+const Task = ({ task }) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -45,7 +46,7 @@ const Task = ({ title, description, subTasks }) => {
 
   const handleDeleteClick = () => {
     // Implement your delete logic here
-    console.log('Delete clicked for task:', title);
+    console.log('Delete clicked for task:', task.title);
   };
 
   return (
@@ -59,10 +60,10 @@ const Task = ({ title, description, subTasks }) => {
           <DeleteIcon />
         </IconButton>
         <Typography variant="h5" component="div">
-          {title}
+          {task.title}
         </Typography>
         <Typography variant="body1" color="text.secondary" style={{ paddingTop: '5px', paddingLeft: '15px'}}>
-          {description}
+          {task.description}
         </Typography>
       </CardContent>
       <CardActions style={{ justifyContent: 'flex-end', padding: '8px 16px' }}>
@@ -77,7 +78,7 @@ const Task = ({ title, description, subTasks }) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          {subTasks}
+          {task.subTasks}
         </CardContent>
       </Collapse>
     </Card>
