@@ -25,6 +25,13 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
   const [editedPoints, setEditedPoints] = React.useState(task.points);
   const [checkedPoints, setCheckedPoints] = React.useState(task.points_completed);
 
+
+  // these can get updated when requesting breakdown, but state won't pick this up so we do it manually
+  useEffect(() => {
+    setEditedPoints(task.points);
+    setCheckedPoints(task.points_completed);
+  }, [task]);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -67,11 +74,14 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
 
   const handlePointCheckboxChange = (index, event) => {
     event.stopPropagation();
-    const newChecked = checkedPoints;
-    newChecked[index] = !newChecked[index];
+    const newChecked = checkedPoints.map((val, i) => {
+      if (i === index) { return !val }
+      else             { return  val }
+    });
+
     setCheckedPoints(newChecked);
     task.points_completed = newChecked;
-    patchTask(task, {points_completed: task.points_completed})
+    patchTask(task, {points_completed: task.points_completed});
   };
 
   const handlePointClick = (index) => {
