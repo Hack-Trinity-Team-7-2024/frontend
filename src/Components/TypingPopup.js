@@ -17,7 +17,7 @@ const TypingPopup = ({ addTask }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete='off'>
         <TextField
           id='outlined-textarea'
           label='New Task'
