@@ -22,18 +22,20 @@ const TaskList = () => {
   };
 
   return (
-    <div>
-      <h1>Task List</h1>
-      <AddTask addTask={addTask} />
-      {tasks.map((task) => (
-        <Task
+    <>
+      <div>
+        <h1>Task List</h1>
+        <AddTask addTask={addTask} />
+        {tasks.map((task) => (
+          <Task
           key={task.id}
           task={task}
           toggleTask={toggleTask}
           deleteTask={deleteTask}
-        />
-      ))}
-    </div>
+          />
+          ))}
+      </div>
+    </>
   );
 };
 
