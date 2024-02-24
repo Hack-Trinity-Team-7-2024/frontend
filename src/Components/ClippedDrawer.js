@@ -11,6 +11,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import TaskIcon from './TaskIcon';
 import TypingPopup from './TypingPopup';
+import LogoTextBeside from './LogoTextBeside';
 
 export default function ClippedDrawer({ drawerWidth, addTask }) {
 
@@ -20,7 +21,7 @@ export default function ClippedDrawer({ drawerWidth, addTask }) {
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
           <Typography variant="h6" noWrap component="div">
-            Notes.AI
+            <LogoTextBeside sx={{width: 150}}/>
           </Typography>
 
           <div style={{flexGrow: 1}}>
