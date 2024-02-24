@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import './Styles/App.css';
 import Home from './Pages/Home';
 
-const theme = createTheme({
+const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: blue,
@@ -19,7 +19,7 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
         <div className="App">
           <Home/>

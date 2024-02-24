@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TypingPopup from '../Components/TypingPopup';
 import TaskList from '../Components/TaskList';
+import ClippedDrawer from '../Components/ClippedDrawer';
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
@@ -58,10 +59,13 @@ const Home = () => {
 
 
   return (
-    <div className='typing-popup-container'>
-        <TypingPopup addTask={addTask} />
-        <TaskList tasks={tasks}/>
-    </div>
+    <> 
+      <ClippedDrawer />
+      <div className='typing-popup-container'>   
+          <TypingPopup addTask={addTask} />
+          <TaskList tasks={tasks}/>
+      </div>
+    </>
   )
 };
 
