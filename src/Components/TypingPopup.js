@@ -22,7 +22,6 @@ const TypingPopup = ({ addTask }) => {
           id='outlined-textarea'
           label='New Task'
           placeholder='Start Typing!'
-          // multiline
           autoFocus
           variant='filled'
           style={{width:'30vw'}}
