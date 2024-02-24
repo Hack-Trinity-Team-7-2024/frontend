@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, CardContent, CardActions, Typography, IconButton, Checkbox } from '@mui/material';
+import React, { useEffect } from 'react';
+import { TextField, Card, CardContent, CardActions, Typography, IconButton, Checkbox } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -20,6 +20,16 @@ const Task = ({ task }) => {
   const [expanded, setExpanded] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
   const [completed, setCompleted] = React.useState(false);
+  const [editingIndex, setEditingIndex] = React.useState(null);
+  const [editedPoints, setEditedPoints] = React.useState([...task.points]);
+
+  useEffect(()=>{
+    console.log("Yo");
+
+    return () => {
+      console.log("unload")
+    }
+  }, [])
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -32,11 +42,6 @@ const Task = ({ task }) => {
     border: '1px solid #293045',
     textAlign: 'left',
     background: 'linear-gradient(45deg, #311b92 30%, #6200ea 90%)',
-    transition: 'box-shadow 0.3s ease',
-    '&:hover': {
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15)',
-      transition: 'box-shadow 0.3s ease',
-    },
     display: hidden ? 'none' : 'block',
   };
 
@@ -54,6 +59,27 @@ const Task = ({ task }) => {
     setCompleted(event.target.checked);
   };
 
+  const handlePointClick = (index) => {
+    setEditingIndex(index);
+  };
+
+  const handlePointKeyDown = (index, event) => {
+    if (event.key === 'Enter') {
+      handlePointBlur();
+    }
+  };
+
+  const handlePointChange = (index, newText) => {
+    const updatedPoints = [...editedPoints];
+    updatedPoints[index] = newText;
+    setEditedPoints(updatedPoints);
+  };
+
+  const handlePointBlur = () => {
+    setEditingIndex(null);
+    console.log('Updated points:', editedPoints);
+  };
+
   const titleContainerStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -61,7 +87,7 @@ const Task = ({ task }) => {
 
   const titleStyle = {
     textDecoration: completed ? 'line-through' : 'none',
-    marginLeft: '8px', // Add some spacing between checkbox and title
+    marginLeft: '8px',
   };
 
   return (
@@ -100,11 +126,26 @@ const Task = ({ task }) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <ol>
-            {task.points.map(point =>
-              <li>{point}</li>
-            )}
-          </ol>
+        <ol>
+          {editedPoints.map((point, index) => (
+            <li key={index} onClick={() => handlePointClick(index)}>
+              {editingIndex === index ? (
+                <TextField
+                  fullWidth
+                  value={point}
+                  onChange={(e) => handlePointChange(index, e.target.value)}
+                  onKeyDown={(e) => handlePointKeyDown(index, e)}
+                  onBlur={handlePointBlur}
+                  autoFocus
+                />
+              ) : (
+                <Typography variant="body1">
+                  {point}
+                </Typography>
+              )}
+            </li>
+          ))}
+        </ol>
         </CardContent>
       </Collapse>
     </Card>

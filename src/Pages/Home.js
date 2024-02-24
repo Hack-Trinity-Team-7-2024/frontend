@@ -44,19 +44,6 @@ const Home = () => {
 
   };
 
-  // const toggleTask = (id) => {
-  //   const updatedTasks = tasks.map((task) =>
-  //     task.id === id ? { ...task, completed: !task.completed } : task
-  //   );
-  //   setTasks(updatedTasks);
-  // };
-
-  // const deleteTask = (id) => {
-  //   const updatedTasks = tasks.filter((task) => task.id !== id);
-  //   setTasks(updatedTasks);
-  // };
-
-
   return (
     <> 
       <ClippedDrawer />

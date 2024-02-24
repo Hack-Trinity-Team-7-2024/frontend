@@ -1,7 +1,6 @@
 import Task from './Task';
 
 const TaskList = ({ tasks }) => {
-  // Reverse the tasks array to display new tasks at the top
   const reversedTasks = [...tasks].reverse();
 
   return (
