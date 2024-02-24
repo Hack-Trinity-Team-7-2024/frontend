@@ -63,6 +63,7 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
 
   const handleBreakdownClick = () => {
     breakdownTask(task);
+	setExpanded(true)
   }
 
 
