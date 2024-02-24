@@ -3,6 +3,8 @@ import TypingPopup from '../Components/TypingPopup';
 import TaskList from '../Components/TaskList';
 import ClippedDrawer from '../Components/ClippedDrawer';
 
+const drawerWidth = 180;
+
 const Home = () => {
   const [tasks, setTasks] = useState([]);
 
@@ -16,7 +18,6 @@ const Home = () => {
     let task = {
       // id: tasks.length + 1,
       content: taskText,
-      completed: false
     };
 
     fetch('/api/tasks',
@@ -46,10 +47,12 @@ const Home = () => {
 
   return (
     <> 
-      <ClippedDrawer />
-      <div className='typing-popup-container'>   
-          <TypingPopup addTask={addTask} />
-          <TaskList tasks={tasks}/>
+      <ClippedDrawer drawerWidth={drawerWidth} />
+      <div  style={{marginLeft: drawerWidth}}>
+        <div className='typing-popup-container'>
+            <TypingPopup addTask={addTask} />
+            <TaskList tasks={tasks}/>
+        </div>
       </div>
     </>
   )
