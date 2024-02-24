@@ -42,8 +42,8 @@ const Task = ({ task }) => {
 
   const deleteButtonStyle = {
     position: 'absolute',
-    top: '5px',
-    right: '5px',
+    top: '10px',
+    right: '16px',
   };
 
   const handleDeleteClick = () => {
@@ -52,6 +52,18 @@ const Task = ({ task }) => {
 
   const handleCheckboxChange = (event) => {
     setCompleted(event.target.checked);
+	task.completed = event.target.checked
+
+	fetch('/api/tasks/' + task.id,
+	{
+	  method: 'PATCH',
+	  headers: {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+	  },
+	  body: JSON.stringify(task)
+	}
+  )
   };
 
   const titleContainerStyle = {
