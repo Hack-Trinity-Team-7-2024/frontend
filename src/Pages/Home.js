@@ -16,7 +16,6 @@ const Home = () => {
     let task = {
       // id: tasks.length + 1,
       content: taskText,
-      completed: false
     };
 
     fetch('/api/tasks',
