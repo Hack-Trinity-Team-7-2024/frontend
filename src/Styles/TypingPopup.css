@@ -1,0 +1,22 @@
+.typing-popup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    margin: 10%;
+  }
+  
+  .typing-popup {
+    display: none;
+    margin-bottom: 20px;
+  }
+  
+  .typing-popup.show {
+    display: block;
+  }
+  
+  .task-cards-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }  

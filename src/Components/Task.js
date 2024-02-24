@@ -1,16 +1,13 @@
 import React from 'react';
+import { Card, CardContent } from '@mui/material';
 
-const Task = ({ task, toggleTask, deleteTask }) => {
+const Task = ({ title }) => {
   return (
-    <div>
-      <span
-        style={{ textDecoration: task.completed ? 'line-through' : 'none' }}
-        onClick={() => toggleTask(task.id)}
-      >
-        {task.text}
-      </span>
-      <button onClick={() => deleteTask(task.id)}>Delete</button>
-    </div>
+    <Card style={{ width: '30vw', marginBottom: '10px' }}>
+      <CardContent>
+        <h3>{title}</h3>
+      </CardContent>
+    </Card>
   );
 };
 
