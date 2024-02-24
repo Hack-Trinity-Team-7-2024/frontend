@@ -100,7 +100,11 @@ const Task = ({ task }) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          {task.subTasks}
+          <ol>
+            {task.points.map(point =>
+              <li>{point}</li>
+            )}
+          </ol>
         </CardContent>
       </Collapse>
     </Card>

@@ -34,8 +34,7 @@ const Home = () => {
       j => {
         let actualTask = {
           ...task,
-          ...j,
-          subTasks: (<code>1. Complete Task<br/>2. Profit</code>) // temporary
+          ...j
         };
         console.log(actualTask);
         setTasks([...tasks, actualTask]);
