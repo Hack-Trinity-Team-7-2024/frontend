@@ -1,28 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button } from '@mui/material';
 import '../Styles/TypingPopup.css';
-import Task from './Task';
 
-const TypingPopup = () => {
-  const [newTask, setNewTask] = useState('');
-  const [tasks, setTasks] = useState([]);
+const TypingPopup = ({ addTask }) => {
+  const [taskInput, setTaskInput] = useState('');
 
   const handleTaskChange = (event) => {
-    setNewTask(event.target.value);
-  };
-
-  const addTask = (taskTitle) => {
-    setTasks([...tasks, { title: taskTitle }]);
+    setTaskInput(event.target.value);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    addTask(newTask);
-    setNewTask('');
+    addTask(taskInput);
+    setTaskInput('');
   }
 
   return (
-    <div className='typing-popup-container'>
+    <div>
       <form onSubmit={handleSubmit}>
         <TextField
           id='outlined-textarea'
@@ -32,7 +26,7 @@ const TypingPopup = () => {
           autoFocus
           variant='filled'
           style={{width:'30vw'}}
-          value={newTask}
+          value={taskInput}
           onChange={handleTaskChange}
         />
         <Button variant="contained" type="submit" style={{ marginTop: '10px' }}>
@@ -40,11 +34,6 @@ const TypingPopup = () => {
         </Button>
       </form>
       
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        {tasks.map((task, index) => (
-          <Task key={index} title={task.title} />
-        ))}
-      </div>
     </div>
   )
 };

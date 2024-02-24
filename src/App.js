@@ -1,9 +1,9 @@
 import React from 'react';
-import TypingPopup from './Components/TypingPopup';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { blue, deepPurple, purple,} from '@mui/material/colors';
 import CssBaseline from '@mui/material/CssBaseline';
 import './Styles/App.css';
+import Home from './Pages/Home';
 
 const theme = createTheme({
   palette: {
@@ -22,7 +22,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
         <div className="App">
-          <TypingPopup />
+          <Home/>
         </div>
     </ThemeProvider>
   );
