@@ -11,3 +11,7 @@
 .task-card:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15); /* Glow effect on hover */
 }
+
+.MuiCardContent-root {
+    padding-right: 3.5em; /* Prevent heading and text from going on top of buttons */
+}

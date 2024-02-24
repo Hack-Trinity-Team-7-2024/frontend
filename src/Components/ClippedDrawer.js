@@ -10,17 +10,22 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import TaskIcon from './TaskIcon';
+import TypingPopup from './TypingPopup';
 
-export default function ClippedDrawer({ drawerWidth }) {
+export default function ClippedDrawer({ drawerWidth, addTask }) {
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-        <Toolbar>
+        <Toolbar style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
           <Typography variant="h6" noWrap component="div">
             Notes.AI
           </Typography>
+
+          <div style={{flexGrow: 1}}>
+            <TypingPopup addTask={addTask}/>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer

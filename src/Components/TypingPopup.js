@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { TextField, Button } from '@mui/material';
+import { TextField, IconButton } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import '../Styles/TypingPopup.css';
+
 
 const TypingPopup = ({ addTask }) => {
   const [taskInput, setTaskInput] = useState('');
@@ -16,24 +18,24 @@ const TypingPopup = ({ addTask }) => {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} autoComplete='off'>
-        <TextField
-          id='outlined-textarea'
-          label='New Task'
-          placeholder='Start Typing!'
-          autoFocus
-          variant='filled'
-          style={{width:'30vw'}}
-          value={taskInput}
-          onChange={handleTaskChange}
-        />
-        <Button variant="contained" type="submit" style={{ marginTop: '10px' }}>
-          Add Task
-        </Button>
-      </form>
-      
-    </div>
+    <form onSubmit={handleSubmit} autoComplete='off' style={{padding: '0.5em 0em'}}>
+      <TextField
+        id='outlined-textarea'
+        label='New Task'
+        placeholder='Start Typing!'
+        // multiline
+        autoFocus
+        variant='outlined'
+        style={{minWidth:'50vw'}}
+        InputProps={{sx: {borderRadius: 20}}}
+        value={taskInput}
+        onChange={handleTaskChange}
+        size='small'
+      />
+      <IconButton variant="contained" type="submit" >
+        <AddCircleIcon/>
+      </IconButton>
+    </form>
   )
 };
 

@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
+import '../Styles/Task.css'
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -48,8 +49,14 @@ const Task = ({ task }) => {
 
   const deleteButtonStyle = {
     position: 'absolute',
-    top: '10px',
-    right: '16px',
+    top: '0.5em',
+    right: '0.5em',
+  };
+  
+  const expandButtonStyle = {
+    position: 'absolute',
+    top: '2em',
+    right: '0.5em',
   };
 
   const handleDeleteClick = () => {
@@ -149,6 +156,7 @@ const Task = ({ task }) => {
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
+          style={expandButtonStyle}
           aria-expanded={expanded}
           aria-label="show more"
         >
