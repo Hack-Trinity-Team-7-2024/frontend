@@ -4,8 +4,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { blue, deepPurple, purple,} from '@mui/material/colors';
 import CssBaseline from '@mui/material/CssBaseline';
 import './Styles/App.css';
+import ClippedDrawer from './Components/ClippedDrawer';
 
-const theme = createTheme({
+const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: blue,
@@ -19,9 +20,10 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
         <div className="App">
+          <ClippedDrawer />
           <TypingPopup />
         </div>
     </ThemeProvider>
