@@ -39,8 +39,13 @@ const Task = ({ task }) => {
 
   const cardStyle = {
     position: 'relative',
-    width: '50vw',
-    marginBottom: '10px',
+    // flexGrow: expanded ? '0' : '1',
+    flexGrow: '1',
+    // width: '50vw',
+    // minWidth: '30vw',
+    // maxWidth: '50%',
+    margin: '10px',
+    // marginBottom: '10px',
     border: '1px solid #293045',
     textAlign: 'left',
     background: 'linear-gradient(45deg, #311b92 30%, #6200ea 90%)',
