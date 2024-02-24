@@ -95,8 +95,19 @@ const Task = ({ task }) => {
   };
 
   const handlePointBlur = () => {
+    const trimmedPoints = editedPoints.map(point => point.trim()).filter(Boolean);
+    setEditedPoints(trimmedPoints);
     setEditingIndex(null);
     console.log('Updated points:', editedPoints);
+    fetch('/api/tasks/' + task.id,
+    {
+      method: 'PATCH',
+	    headers: {
+		    'Accept': 'application/json',
+		    'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({points : editedPoints})
+    });
   };
 
   const titleContainerStyle = {
