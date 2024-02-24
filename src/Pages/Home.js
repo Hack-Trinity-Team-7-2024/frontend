@@ -15,6 +15,10 @@ const Home = () => {
   }, []); // only run once
 
   const addTask = (taskText) => {
+    if (!taskText) { // if no text specified, do nothing
+      return;
+    }
+
     let task = {
       // id: tasks.length + 1,
       content: taskText,
@@ -47,10 +51,9 @@ const Home = () => {
 
   return (
     <> 
-      <ClippedDrawer drawerWidth={drawerWidth} />
+      <ClippedDrawer drawerWidth={drawerWidth} addTask={addTask} />
       <div  style={{marginLeft: drawerWidth}}>
-        <div className='typing-popup-container'>
-            <TypingPopup addTask={addTask} />
+        <div className='typing-popup-container flex-col-centered'>
             <TaskList tasks={tasks}/>
         </div>
       </div>
