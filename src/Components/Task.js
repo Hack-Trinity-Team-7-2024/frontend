@@ -20,7 +20,7 @@ const ExpandMore = styled((props) => {
 const Task = ({ task }) => {
   const [expanded, setExpanded] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
-  const [completed, setCompleted] = React.useState(false);
+  const [completed, setCompleted] = React.useState(task.completed);
   const [editingIndex, setEditingIndex] = React.useState(null);
   const [editedPoints, setEditedPoints] = React.useState([...task.points]);
   const [checkedPoints, setCheckedPoints] = React.useState(Array(task.points.length).fill(false));
