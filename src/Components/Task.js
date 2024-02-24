@@ -16,16 +16,16 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-// const Task = ({ title, description, subTasks }) => {
 const Task = ({ task }) => {
   const [expanded, setExpanded] = React.useState(false);
+  const [hidden, setHidden] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const cardStyle = {
-    position: 'relative', // Ensure proper positioning for absolute element
+    position: 'relative',
     width: '30vw',
     marginBottom: '10px',
     border: '1px solid #293045',
@@ -36,6 +36,7 @@ const Task = ({ task }) => {
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15)',
       transition: 'box-shadow 0.3s ease',
     },
+    display: hidden ? 'none' : 'block',
   };
 
   const deleteButtonStyle = {
@@ -45,8 +46,7 @@ const Task = ({ task }) => {
   };
 
   const handleDeleteClick = () => {
-    // Implement your delete logic here
-    console.log('Delete clicked for task:', task.title);
+    setHidden(true);
   };
 
   return (
