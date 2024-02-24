@@ -1,45 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import { TextField } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { IconButton, TextField } from '@mui/material';
 
-const TypingPopup = () => {
+const TypingPopup = ({ addTask }) => {
   const [showPopup, setShowPopup] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
-    const handleTyping = (event) => {
-        console.log(event.keyCode);
-        console.log(event.key);
-        if(event.key === 'Enter' && showPopup){
-            event.preventDefault();
+    // only register the handler etc if the popup isn't shown
+    if (!showPopup) {
+      const handleTyping = (event) => {
+        // Check if nothing is currently focused
+        if (document.activeElement === document.body) {
+          // Check if the pressed key corresponds to a printable character
+          const charCode = event.key;
+          if (charCode.length === 1 && charCode !== ' ') {
+              setShowPopup(true);
+          }
         }
-        else if (event.key === 'Enter' && !showPopup){
-            event.preventDefault();
-        }
-        else{
-            setShowPopup(true);
-        }
-    };
+      };
+  
+      document.body.addEventListener('keydown', handleTyping);
+  
+      return () => {
+        document.body.removeEventListener('keydown', handleTyping);
+      };
+    }
+  }, [showPopup]);
 
-    document.body.addEventListener('keydown', handleTyping);
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+  }
 
-    return () => {
-      document.body.removeEventListener('keydown', handleTyping);
-    };
-  }, []);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // console.log('test', inputValue);
+    addTask(inputValue);
+    setInputValue('');
+    setShowPopup(false);
+  }
 
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
-      {showPopup && (
-        <TextField
-            id="outlined-textarea"
-            label="New Task"
-            placeholder="Start Typing!"
-            multiline
-            autoFocus
-            style={{width:'30vw'}}
-        />
-      )}
-    </div>
-  );
+  return <>
+    {showPopup && (
+      <div className='typingPopup'>
+        <form onSubmit={handleSubmit}>
+          <TextField
+              id='outlined-textarea'
+              label='New Task'
+              placeholder='Start Typing!'
+              // multiline
+              autoFocus
+              variant='filled'
+              style={{width:'30vw'}}
+              value={inputValue}
+              onChange={handleChange}
+              />
+          <IconButton type='submit' style={{height: '100%'}}>
+            <AddIcon/>
+          </IconButton>
+        </form>
+        </div>
+    )}
+  </>
 };
 
 export default TypingPopup;

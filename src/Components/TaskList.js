@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Task from './Task';
 import AddTask from './AddTask';
+import TypingPopup from './TypingPopup';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
@@ -22,18 +23,21 @@ const TaskList = () => {
   };
 
   return (
-    <div>
-      <h1>Task List</h1>
-      <AddTask addTask={addTask} />
-      {tasks.map((task) => (
-        <Task
+    <>
+      <div>
+        <h1>Task List</h1>
+        <AddTask addTask={addTask} />
+        {tasks.map((task) => (
+          <Task
           key={task.id}
           task={task}
           toggleTask={toggleTask}
           deleteTask={deleteTask}
-        />
-      ))}
-    </div>
+          />
+          ))}
+      </div>
+      <TypingPopup addTask={addTask}/>
+    </>
   );
 };
 
