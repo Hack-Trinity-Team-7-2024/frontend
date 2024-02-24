@@ -65,15 +65,23 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
     breakdownTask(task);
   }
 
-  const handleCheckboxChange = (event) => {
-    setCompleted(event.target.checked);
-    task.completed = event.target.checked
 
+  const changeCheckboxTo = (val) => {
+    setCompleted(val);
+    task.completed = val;
     patchTask(task, {completed: task.completed});
   };
 
+  const handleCheckboxChange = (event) => {
+    changeCheckboxTo(event.target.checked);
+  };
+
   const handlePointCheckboxChange = (index, event) => {
-    event.stopPropagation();
+    // event.stopPropagation();
+    if (checkedPoints.every(c => c === true)) { // they're all true right now, so we're about to turn one off!
+      changeCheckboxTo(false);
+    }
+
     const newChecked = checkedPoints.map((val, i) => {
       if (i === index) { return !val }
       else             { return  val }
@@ -82,6 +90,10 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
     setCheckedPoints(newChecked);
     task.points_completed = newChecked;
     patchTask(task, {points_completed: task.points_completed});
+
+    if (newChecked.every(c => c === true)) {
+      changeCheckboxTo(true);
+    }
   };
 
   const handlePointClick = (index) => {
@@ -101,11 +113,11 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
   };
 
   const handlePointBlur = () => {
-    const trimmedPoints = editedPoints.map(point => point.trim()).filter(Boolean);
+    const trimmedPoints = editedPoints.map(point => point.trim());
     setEditedPoints(trimmedPoints);
     setEditingIndex(null);
     console.log('Updated points:', editedPoints);
-    patchTask({points : editedPoints});
+    patchTask(task, {points : editedPoints});
   };
 
   const titleContainerStyle = {
@@ -171,20 +183,20 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
             {editedPoints.map((point, index) => (
-              <div key={index} style={{display: 'flex', alignItems: 'center'}}>
+              <div key={index} style={{display: 'flex', alignItems: 'center', textDecoration: checkedPoints[index] ? 'line-through' : 'none',}}>
                 <Checkbox
                   checked={checkedPoints[index]}
                   onChange={(event) => handlePointCheckboxChange(index, event)}
                   />
                 {editingIndex === index ? (
                   <TextField
-                  fullWidth
-                  value={point}
-                  onChange={(e) => handlePointChange(index, e.target.value)}
-                  onClick={() => handlePointClick(index)}
-                  onKeyDown={(e) => handlePointKeyDown(index, e)}
-                  onBlur={handlePointBlur}
-                  autoFocus
+                    fullWidth
+                    value={point}
+                    onChange={(e) => handlePointChange(index, e.target.value)}
+                    onClick={() => handlePointClick(index)}
+                    onKeyDown={(e) => handlePointKeyDown(index, e)}
+                    onBlur={handlePointBlur}
+                    autoFocus
                   />
                   ) : (
                     <Typography variant="body1" onClick={() => handlePointClick(index)}>
