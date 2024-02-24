@@ -22,6 +22,7 @@ const Task = ({ task }) => {
   const [completed, setCompleted] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState(null);
   const [editedPoints, setEditedPoints] = React.useState([...task.points]);
+  const [checkedPoints, setCheckedPoints] = React.useState(Array(task.points.length).fill(false));
 
   useEffect(()=>{
     console.log("Yo");
@@ -69,6 +70,13 @@ const Task = ({ task }) => {
 	  body: JSON.stringify(task)
 	}
   )
+  };
+
+  const handlePointCheckboxChange = (index, event) => {
+    event.stopPropagation();
+    const newChecked = [...checkedPoints];
+    newChecked[index] = !newChecked[index];
+    setCheckedPoints(newChecked);
   };
 
   const handlePointClick = (index) => {
@@ -149,26 +157,29 @@ const Task = ({ task }) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-        <ol>
           {editedPoints.map((point, index) => (
-            <li key={index} onClick={() => handlePointClick(index)}>
+            <div key={index} style={{display: 'flex', alignItems: 'center'}}>
+              <Checkbox
+                checked={checkedPoints[index]}
+                onChange={(event) => handlePointCheckboxChange(index, event)}
+              />
               {editingIndex === index ? (
                 <TextField
                   fullWidth
                   value={point}
                   onChange={(e) => handlePointChange(index, e.target.value)}
+                  onClick={() => handlePointClick(index)}
                   onKeyDown={(e) => handlePointKeyDown(index, e)}
                   onBlur={handlePointBlur}
                   autoFocus
                 />
               ) : (
-                <Typography variant="body1">
+                <Typography variant="body1" onClick={() => handlePointClick(index)}>
                   {point}
                 </Typography>
               )}
-            </li>
+            </div>
           ))}
-        </ol>
         </CardContent>
       </Collapse>
     </Card>
