@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import '../Styles/Task.css'
 
 const ExpandMore = styled((props) => {
@@ -17,21 +18,12 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const Task = ({ task }) => {
+const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => {
   const [expanded, setExpanded] = React.useState(false);
-  const [hidden, setHidden] = React.useState(false);
-  const [completed, setCompleted] = React.useState(false);
+  const [completed, setCompleted] = React.useState(task.completed);
   const [editingIndex, setEditingIndex] = React.useState(null);
-  const [editedPoints, setEditedPoints] = React.useState([...task.points]);
-  const [checkedPoints, setCheckedPoints] = React.useState(Array(task.points.length).fill(false));
-
-  useEffect(()=>{
-    console.log("Yo");
-
-    return () => {
-      console.log("unload")
-    }
-  }, [])
+  const [editedPoints, setEditedPoints] = React.useState(task.points);
+  const [checkedPoints, setCheckedPoints] = React.useState(task.points_completed);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -44,7 +36,6 @@ const Task = ({ task }) => {
     border: '1px solid #293045',
     textAlign: 'left',
     background: 'linear-gradient(45deg, #311b92 30%, #6200ea 90%)',
-    display: hidden ? 'none' : 'block',
   };
 
   const deleteButtonStyle = {
@@ -60,30 +51,27 @@ const Task = ({ task }) => {
   };
 
   const handleDeleteClick = () => {
-    setHidden(true);
+    deleteTask(task);
   };
+
+  const handleBreakdownClick = () => {
+    breakdownTask(task);
+  }
 
   const handleCheckboxChange = (event) => {
     setCompleted(event.target.checked);
-	task.completed = event.target.checked
+    task.completed = event.target.checked
 
-	fetch('/api/tasks/' + task.id,
-	{
-	  method: 'PATCH',
-	  headers: {
-		'Accept': 'application/json',
-		'Content-Type': 'application/json'
-	  },
-	  body: JSON.stringify(task)
-	}
-  )
+    patchTask(task, {completed: task.completed});
   };
 
   const handlePointCheckboxChange = (index, event) => {
     event.stopPropagation();
-    const newChecked = [...checkedPoints];
+    const newChecked = checkedPoints;
     newChecked[index] = !newChecked[index];
     setCheckedPoints(newChecked);
+    task.points_completed = newChecked;
+    patchTask(task, {points_completed: task.points_completed})
   };
 
   const handlePointClick = (index) => {
@@ -107,15 +95,7 @@ const Task = ({ task }) => {
     setEditedPoints(trimmedPoints);
     setEditingIndex(null);
     console.log('Updated points:', editedPoints);
-    fetch('/api/tasks/' + task.id,
-    {
-      method: 'PATCH',
-	    headers: {
-		    'Accept': 'application/json',
-		    'Content-Type': 'application/json'
-	    },
-	    body: JSON.stringify({points : editedPoints})
-    });
+    patchTask({points : editedPoints});
   };
 
   const titleContainerStyle = {
@@ -153,26 +133,41 @@ const Task = ({ task }) => {
         >
           <DeleteIcon />
         </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          style={expandButtonStyle}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
+
+        {
+          editedPoints ?
+          <ExpandMore
+            expand={expanded}
+            onClick={handleExpandClick}
+            style={expandButtonStyle}
+            aria-expanded={expanded}
+            aria-label="show more"
+            >
+            <ExpandMoreIcon />
+          </ExpandMore>
+          : <IconButton
+              aria-label="expand"
+              onClick={handleBreakdownClick}
+              style={expandButtonStyle}
+              >
+              <AddCircleIcon />
+            </IconButton>
+        }
       </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          {editedPoints.map((point, index) => (
-            <div key={index} style={{display: 'flex', alignItems: 'center'}}>
-              <Checkbox
-                checked={checkedPoints[index]}
-                onChange={(event) => handlePointCheckboxChange(index, event)}
-              />
-              {editingIndex === index ? (
-                <TextField
+
+      {
+        editedPoints ?
+        (
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            {editedPoints.map((point, index) => (
+              <div key={index} style={{display: 'flex', alignItems: 'center'}}>
+                <Checkbox
+                  checked={checkedPoints[index]}
+                  onChange={(event) => handlePointCheckboxChange(index, event)}
+                  />
+                {editingIndex === index ? (
+                  <TextField
                   fullWidth
                   value={point}
                   onChange={(e) => handlePointChange(index, e.target.value)}
@@ -180,16 +175,19 @@ const Task = ({ task }) => {
                   onKeyDown={(e) => handlePointKeyDown(index, e)}
                   onBlur={handlePointBlur}
                   autoFocus
-                />
-              ) : (
-                <Typography variant="body1" onClick={() => handlePointClick(index)}>
-                  {point}
-                </Typography>
-              )}
-            </div>
-          ))}
-        </CardContent>
-      </Collapse>
+                  />
+                  ) : (
+                    <Typography variant="body1" onClick={() => handlePointClick(index)}>
+                    {point}
+                  </Typography>
+                )}
+              </div>
+            ))}
+          </CardContent>
+        </Collapse>
+        )
+      : <></>
+      }
     </Card>
   );
 };
