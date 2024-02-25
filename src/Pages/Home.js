@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import TypingPopup from '../Components/TypingPopup';
 import TaskList from '../Components/TaskList';
 import ClippedDrawer from '../Components/ClippedDrawer';
 
