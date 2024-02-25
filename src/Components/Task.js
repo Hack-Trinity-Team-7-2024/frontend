@@ -104,6 +104,14 @@ const Task = ({ task, taskFuncs }) => {
     changeCheckboxTo(event.target.checked);
   };
 
+  const formattedTime = new Date(task.time/1000000).toLocaleString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
   return (
     <>
       <CardContent>
@@ -115,6 +123,9 @@ const Task = ({ task, taskFuncs }) => {
           />
           <Typography variant="h5" component="div" style={{...titleStyle, textDecoration: completed ? 'line-through' : 'none'}}>
             {task.title}
+          </Typography>
+          <Typography variant="caption" color="text.secondary" flexGrow="1" textAlign="right" whiteSpace="noWrap" marginRight="2px">
+            {formattedTime}
           </Typography>
         </div>
         <Typography variant="body1" color="text.secondary" style={{ paddingTop: '5px', paddingLeft: '15px' }}>
