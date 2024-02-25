@@ -10,11 +10,7 @@ const Home = () => {
 
   const dummyId = useRef(-1);
 
-  useEffect(() => {
-    fetch('/api/tasks')
-      .then(res => res.json())
-      .then(j => setTasks(j.reverse())); // tasks are stored in order of creation in the backend
-  }, []); // only run once	
+  useEffect(() => notCompletedTasks(), []); // only run once	
 
   
 
@@ -105,6 +101,20 @@ const Home = () => {
       });
   }
   
+  const completedTasks = () => {
+	console.log("completed tasks")
+	fetch(`/api/tasks/completed`)
+	.then(res => res.json())
+	.then(j => setTasks(j.reverse())); // tasks are stored in order of creation in the backend
+  }
+
+  const notCompletedTasks = () => {
+	console.log("not completed tasks")
+	fetch(`/api/tasks/not-completed`)
+	.then(res => res.json())
+	.then(j => setTasks(j.reverse())); // tasks are stored in order of creation in the backend
+  }
+
   const refineTask = (taskToRefine, refineText) => {
     fetch(`/api/tasks/recreate/${taskToRefine.id}`,
       {
@@ -127,9 +137,11 @@ const Home = () => {
       });
   }
   
+
+
   return (
     <> 
-      <ClippedDrawer drawerWidth={drawerWidth} addTask={addTask} />
+      <ClippedDrawer drawerWidth={drawerWidth} addTask={addTask} showCompletedTasks={completedTasks} showNotCompletedTasks={notCompletedTasks}/>
       <div  style={{marginLeft: drawerWidth}}>
         <div className='typing-popup-container flex-col-centered'>
         {

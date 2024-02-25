@@ -13,7 +13,7 @@ import TaskIcon from './TaskIcon';
 import TypingPopup from './TypingPopup';
 import LogoTextBeside from './LogoTextBeside';
 
-export default function ClippedDrawer({ drawerWidth, addTask }) {
+export default function ClippedDrawer({ drawerWidth, addTask, showCompletedTasks, showNotCompletedTasks }) {
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -40,16 +40,22 @@ export default function ClippedDrawer({ drawerWidth, addTask }) {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            {['To-Do', 'Completed'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
+              <ListItem key='To-Do' disablePadding>
+                <ListItemButton onClick={showNotCompletedTasks}>
                   <ListItemIcon>
                     <TaskIcon />
                   </ListItemIcon>
-                  <ListItemText primary={text} />
+                  <ListItemText primary='To-Do' />
                 </ListItemButton>
               </ListItem>
-            ))}
+			  <ListItem key='Completed' disablePadding>
+                <ListItemButton onClick={showCompletedTasks}>
+                  <ListItemIcon>
+                    <TaskIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='Completed' />
+                </ListItemButton>
+              </ListItem>
           </List>
         </Box>
       </Drawer>
