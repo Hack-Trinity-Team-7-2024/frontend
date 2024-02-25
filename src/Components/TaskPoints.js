@@ -18,6 +18,7 @@ export const SkeletonTaskPoints = () => {
 export const TaskPoints = ({ task, taskFuncs, setTaskCompleted }) => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [editedPoints, setEditedPoints] = useState(task.points);
+  const [initialPoints, setInitialPoints] = useState(task.points);
   const [checkedPoints, setCheckedPoints] = useState(task.points_completed);
 
   // these can get updated when requesting breakdown, but state won't pick this up so we do it manually
@@ -53,6 +54,8 @@ export const TaskPoints = ({ task, taskFuncs, setTaskCompleted }) => {
 
   const handlePointKeyDown = (index, event) => {
     if (event.key === 'Enter') {
+      savePoints();
+    } else if (event.key === 'Escape') {
       handlePointBlur();
     }
   };
@@ -64,12 +67,18 @@ export const TaskPoints = ({ task, taskFuncs, setTaskCompleted }) => {
   };
 
   const handlePointBlur = () => {
+    setEditedPoints(initialPoints);
+    setEditingIndex(null);
+  };
+  
+  const savePoints = () => {
     const trimmedPoints = editedPoints.map(point => point.trim());
     setEditedPoints(trimmedPoints);
     setEditingIndex(null);
+    setInitialPoints(trimmedPoints);
     console.log('Updated points:', editedPoints);
     taskFuncs.patchTask(task, {points : editedPoints});
-  };
+  }
 
 
   return editedPoints.map((point, index) => (
@@ -85,6 +94,7 @@ export const TaskPoints = ({ task, taskFuncs, setTaskCompleted }) => {
             onChange={(e) => handlePointChange(index, e.target.value)}
             onClick={() => handlePointClick(index)}
             onKeyDown={(e) => handlePointKeyDown(index, e)}
+            onFocus={(e) => e.target.select()}
             onBlur={handlePointBlur}
             autoFocus
           />
