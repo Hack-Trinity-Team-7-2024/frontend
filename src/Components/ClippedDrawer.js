@@ -12,6 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import TaskIcon from './TaskIcon';
 import TypingPopup from './TypingPopup';
 import LogoTextBeside from './LogoTextBeside';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 export default function ClippedDrawer({ drawerWidth, addTask }) {
 
@@ -40,16 +41,22 @@ export default function ClippedDrawer({ drawerWidth, addTask }) {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            {['To-Do', 'Completed'].map((text, index) => (
-              <ListItem key={text} disablePadding>
+              <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
                     <TaskIcon />
                   </ListItemIcon>
-                  <ListItemText primary={text} />
+                  <ListItemText primary={"To-Do"} />
                 </ListItemButton>
               </ListItem>
-            ))}
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <AssignmentTurnedInIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={"Completed"} />
+                </ListItemButton>
+              </ListItem>
           </List>
         </Box>
       </Drawer>
