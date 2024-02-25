@@ -1,5 +1,19 @@
-import { CardContent, Checkbox, TextField, Typography } from "@mui/material"
+import { CardContent, Checkbox, Skeleton, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
+
+
+export const SkeletonTaskPoints = () => {
+  return Array.from({ length: 2 }, (_) => (
+      <div style={{ display: 'flex', alignItems: 'center'}}>
+        <Checkbox checked={false}></Checkbox>
+          <Typography variant="body1" width='100%'>
+            <Skeleton />
+          </Typography>
+      </div>
+    )
+  );
+}
+
 
 export const TaskPoints = ({ task, taskFuncs, setTaskCompleted }) => {
   const [editingIndex, setEditingIndex] = useState(null);
@@ -58,31 +72,28 @@ export const TaskPoints = ({ task, taskFuncs, setTaskCompleted }) => {
   };
 
 
-  return (
-    <CardContent>
-      {editedPoints.map((point, index) => (
-        <div key={index} style={{ display: 'flex', alignItems: 'center', textDecoration: checkedPoints[index] ? 'line-through' : 'none', }}>
-          <Checkbox
-            checked={checkedPoints[index]}
-            onChange={(event) => handlePointCheckboxChange(index, event)}
+  return editedPoints.map((point, index) => (
+      <div key={index} style={{ display: 'flex', alignItems: 'center', textDecoration: checkedPoints[index] ? 'line-through' : 'none', }}>
+        <Checkbox
+          checked={checkedPoints[index]}
+          onChange={(event) => handlePointCheckboxChange(index, event)}
+        />
+        {editingIndex === index ? (
+          <TextField
+            fullWidth
+            value={point}
+            onChange={(e) => handlePointChange(index, e.target.value)}
+            onClick={() => handlePointClick(index)}
+            onKeyDown={(e) => handlePointKeyDown(index, e)}
+            onBlur={handlePointBlur}
+            autoFocus
           />
-          {editingIndex === index ? (
-            <TextField
-              fullWidth
-              value={point}
-              onChange={(e) => handlePointChange(index, e.target.value)}
-              onClick={() => handlePointClick(index)}
-              onKeyDown={(e) => handlePointKeyDown(index, e)}
-              onBlur={handlePointBlur}
-              autoFocus
-            />
-          ) : (
-            <Typography variant="body1" onClick={() => handlePointClick(index)}>
-              {point}
-            </Typography>
-          )}
-        </div>
-      ))}
-    </CardContent>
-  )
+        ) : (
+          <Typography variant="body1" onClick={() => handlePointClick(index)}>
+            {point}
+          </Typography>
+        )}
+      </div>
+    )
+  );
 }

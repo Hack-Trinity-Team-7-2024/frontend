@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import '../Styles/Task.css'
-import { TaskPoints } from './TaskPoints';
+import { SkeletonTaskPoints, TaskPoints } from './TaskPoints';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -151,12 +151,15 @@ const Task = ({ task, taskFuncs }) => {
         }
       </CardActions>
 
-      {
-        task.points && // only render the following if editedPoints truthy
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <TaskPoints task={task} taskFuncs={taskFuncs} setTaskCompleted={changeCheckboxTo}/>
-        </Collapse>
-      }
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+        {
+          task.points
+          ? <TaskPoints task={task} taskFuncs={taskFuncs} setTaskCompleted={changeCheckboxTo}/>
+          : <SkeletonTaskPoints/>
+        }
+        </CardContent>
+      </Collapse>
     </>
   );
 };
