@@ -1,16 +1,21 @@
-import Task from './Task';
+import Task, { SkeletonTask, TaskCard } from './Task';
 
 const TaskList = ({ tasks, taskFuncs }) => {
-  const reversedTasks = [...tasks].reverse();
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {reversedTasks.map(task => (
-        <Task
-          key={task.id}
-          task={task}
-          taskFuncs={taskFuncs}
-        />
+      {tasks.map(task => (
+        <TaskCard>
+        {
+          task.dummy
+          ? <SkeletonTask />
+          : <Task
+              key={task.id}
+              task={task}
+              taskFuncs={taskFuncs}
+              />
+        }
+        </TaskCard>
       ))}
     </div>
   );

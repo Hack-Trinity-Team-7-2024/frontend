@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { TextField, Card, CardContent, CardActions, Typography, IconButton, Checkbox } from '@mui/material';
+import { TextField, Card, CardContent, CardActions, Typography, IconButton, Checkbox, Skeleton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -18,12 +18,71 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
+const cardStyle = {
+  position: 'relative',
+  width: '50vw',
+  marginBottom: '10px',
+  border: '1px solid #293045',
+  textAlign: 'left',
+  background: 'linear-gradient(45deg, #311b92 30%, #6200ea 90%)',
+};
+
+const deleteButtonStyle = {
+  position: 'absolute',
+  top: '0.5em',
+  right: '0.5em',
+};
+
+const expandButtonStyle = {
+  position: 'absolute',
+  top: '2em',
+  right: '0.5em',
+};
+
+const titleContainerStyle = {
+  display: 'flex',
+  alignItems: 'center',
+};
+
+const titleStyle = {
+  marginLeft: '8px',
+};
+
+// this approach needed so that the skeleton and real task share the same card
+// so that when they're swapped out, the card stays the same and just updates, instead of being recreated
+export const TaskCard = ({ children }) => {
+  return (
+    <Card style={cardStyle}>
+      {children}
+    </Card>
+  );
+}
+
+export const SkeletonTask = () => {
+  return (
+    <CardContent>
+      <div style={titleContainerStyle}>
+        <Typography variant="h5" component="div" style={{...titleStyle, width: '100%'}}>
+          <Skeleton />
+        </Typography>
+      </div>
+      <Typography variant="body1" color="text.secondary" style={{ paddingTop: '5px', paddingLeft: '15px' }}>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </Typography>
+    </CardContent>
+  );
+};
+
+
 const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => {
   const [expanded, setExpanded] = React.useState(false);
   const [completed, setCompleted] = React.useState(task.completed);
   const [editingIndex, setEditingIndex] = React.useState(null);
   const [editedPoints, setEditedPoints] = React.useState(task.points);
   const [checkedPoints, setCheckedPoints] = React.useState(task.points_completed);
+
 
 
   // these can get updated when requesting breakdown, but state won't pick this up so we do it manually
@@ -36,26 +95,6 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
     setExpanded(!expanded);
   };
 
-  const cardStyle = {
-    position: 'relative',
-    width: '50vw',
-    marginBottom: '10px',
-    border: '1px solid #293045',
-    textAlign: 'left',
-    background: 'linear-gradient(45deg, #311b92 30%, #6200ea 90%)',
-  };
-
-  const deleteButtonStyle = {
-    position: 'absolute',
-    top: '0.5em',
-    right: '0.5em',
-  };
-  
-  const expandButtonStyle = {
-    position: 'absolute',
-    top: '2em',
-    right: '0.5em',
-  };
 
   const handleDeleteClick = () => {
     deleteTask(task);
@@ -63,7 +102,7 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
 
   const handleBreakdownClick = () => {
     breakdownTask(task);
-	setExpanded(true)
+    setExpanded(true)
   }
 
 
@@ -121,18 +160,8 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
     patchTask(task, {points : editedPoints});
   };
 
-  const titleContainerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-  };
-
-  const titleStyle = {
-    textDecoration: completed ? 'line-through' : 'none',
-    marginLeft: '8px',
-  };
-
   return (
-    <Card style={cardStyle}>
+    <>
       <CardContent>
         <div style={titleContainerStyle}>
           <Checkbox
@@ -140,7 +169,7 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
             onChange={handleCheckboxChange}
             inputProps={{ 'aria-label': 'completed checkbox' }}
           />
-          <Typography variant="h5" component="div" style={titleStyle}>
+          <Typography variant="h5" component="div" style={{...titleStyle, textDecoration: completed ? 'line-through' : 'none'}}>
             {task.title}
           </Typography>
         </div>
@@ -158,16 +187,16 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
         </IconButton>
 
         {
-          editedPoints ?
-          <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            style={expandButtonStyle}
-            aria-expanded={expanded}
-            aria-label="show more"
-            >
-            <ExpandMoreIcon />
-          </ExpandMore>
+          editedPoints
+          ? <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              style={expandButtonStyle}
+              aria-expanded={expanded}
+              aria-label="show more"
+              >
+              <ExpandMoreIcon />
+            </ExpandMore>
           : <IconButton
               aria-label="expand"
               onClick={handleBreakdownClick}
@@ -179,7 +208,7 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
       </CardActions>
 
       {
-        editedPoints ?
+        editedPoints && // only render the following if editedPoints truthy
         (
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
@@ -209,9 +238,8 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
           </CardContent>
         </Collapse>
         )
-      : <></>
       }
-    </Card>
+    </>
   );
 };
 

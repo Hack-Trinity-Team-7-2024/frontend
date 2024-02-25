@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TypingPopup from '../Components/TypingPopup';
 import TaskList from '../Components/TaskList';
 import ClippedDrawer from '../Components/ClippedDrawer';
@@ -8,10 +8,12 @@ const drawerWidth = 180;
 const Home = () => {
   const [tasks, setTasks] = useState([]);
 
+  const dummyId = useRef(-1);
+
   useEffect(() => {
     fetch('/api/tasks')
       .then(res => res.json())
-      .then(j => setTasks(j));
+      .then(j => setTasks(j.reverse())); // tasks are stored in order of creation in the backend
   }, []); // only run once
 
   const addTask = (taskText) => {
@@ -19,8 +21,16 @@ const Home = () => {
       return;
     }
 
+    let dummyTask = {
+      id: dummyId.current,
+      dummy: true
+    }
+    console.log(dummyTask, dummyId.current)
+    dummyId.current -= 1; // negative and decrement to not collide with real task ids
+    console.log(dummyTask, dummyId.current)
+    setTasks([dummyTask, ...tasks]); // add to the head of tasks
+
     let task = {
-      // id: tasks.length + 1,
       content: taskText,
       completed: false
     };
@@ -43,7 +53,12 @@ const Home = () => {
           ...j
         };
         console.log(actualTask);
-        setTasks([...tasks, actualTask]);
+        setTasks(cur => cur.map(t => {
+          if (t === dummyTask) { // should match exactly the current dummy task via reference
+            return actualTask;
+          }
+          return t; // leave others alone
+        }));
       }
     );
   };
@@ -53,8 +68,8 @@ const Home = () => {
       {
         method: 'PATCH',
         headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(newTask)
       }
