@@ -12,6 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import TaskIcon from './TaskIcon';
 import TypingPopup from './TypingPopup';
 import LogoTextBeside from './LogoTextBeside';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 export default function ClippedDrawer({ drawerWidth, addTask, showCompletedTasks, showNotCompletedTasks }) {
 
@@ -51,11 +52,11 @@ export default function ClippedDrawer({ drawerWidth, addTask, showCompletedTasks
 			  <ListItem key='Completed' disablePadding>
                 <ListItemButton onClick={showCompletedTasks}>
                   <ListItemIcon>
-                    <TaskIcon />
+                    <AssignmentTurnedInIcon />
                   </ListItemIcon>
-                  <ListItemText primary='Completed' />
+                  <ListItemText primary={"Completed"} />
                 </ListItemButton>
-              </ListItem>
+			  </ListItem>
           </List>
         </Box>
       </Drawer>
