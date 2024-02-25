@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import '../Styles/Task.css'
+import { TaskPoints } from './TaskPoints';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -75,89 +76,32 @@ export const SkeletonTask = () => {
   );
 };
 
-
-const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => {
+const Task = ({ task, taskFuncs }) => {
   const [expanded, setExpanded] = React.useState(false);
   const [completed, setCompleted] = React.useState(task.completed);
-  const [editingIndex, setEditingIndex] = React.useState(null);
-  const [editedPoints, setEditedPoints] = React.useState(task.points);
-  const [checkedPoints, setCheckedPoints] = React.useState(task.points_completed);
 
-
-
-  // these can get updated when requesting breakdown, but state won't pick this up so we do it manually
-  useEffect(() => {
-    setEditedPoints(task.points);
-    setCheckedPoints(task.points_completed);
-  }, [task]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-
   const handleDeleteClick = () => {
-    deleteTask(task);
+    taskFuncs.deleteTask(task);
   };
 
   const handleBreakdownClick = () => {
-    breakdownTask(task);
+    taskFuncs.breakdownTask(task);
     setExpanded(true)
   }
-
 
   const changeCheckboxTo = (val) => {
     setCompleted(val);
     task.completed = val;
-    patchTask(task, {completed: task.completed});
+    taskFuncs.patchTask(task, {completed: task.completed});
   };
 
   const handleCheckboxChange = (event) => {
     changeCheckboxTo(event.target.checked);
-  };
-
-  const handlePointCheckboxChange = (index, event) => {
-    // event.stopPropagation();
-    if (checkedPoints.every(c => c === true)) { // they're all true right now, so we're about to turn one off!
-      changeCheckboxTo(false);
-    }
-
-    const newChecked = checkedPoints.map((val, i) => {
-      if (i === index) { return !val }
-      else             { return  val }
-    });
-
-    setCheckedPoints(newChecked);
-    task.points_completed = newChecked;
-    patchTask(task, {points_completed: task.points_completed});
-
-    if (newChecked.every(c => c === true)) {
-      changeCheckboxTo(true);
-    }
-  };
-
-  const handlePointClick = (index) => {
-    setEditingIndex(index);
-  };
-
-  const handlePointKeyDown = (index, event) => {
-    if (event.key === 'Enter') {
-      handlePointBlur();
-    }
-  };
-
-  const handlePointChange = (index, newText) => {
-    const updatedPoints = [...editedPoints];
-    updatedPoints[index] = newText;
-    setEditedPoints(updatedPoints);
-  };
-
-  const handlePointBlur = () => {
-    const trimmedPoints = editedPoints.map(point => point.trim());
-    setEditedPoints(trimmedPoints);
-    setEditingIndex(null);
-    console.log('Updated points:', editedPoints);
-    patchTask(task, {points : editedPoints});
   };
 
   return (
@@ -187,7 +131,7 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
         </IconButton>
 
         {
-          editedPoints
+          task.points
           ? <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
@@ -208,36 +152,10 @@ const Task = ({ task, taskFuncs: { deleteTask, patchTask, breakdownTask } }) => 
       </CardActions>
 
       {
-        editedPoints && // only render the following if editedPoints truthy
-        (
+        task.points && // only render the following if editedPoints truthy
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            {editedPoints.map((point, index) => (
-              <div key={index} style={{display: 'flex', alignItems: 'center', textDecoration: checkedPoints[index] ? 'line-through' : 'none',}}>
-                <Checkbox
-                  checked={checkedPoints[index]}
-                  onChange={(event) => handlePointCheckboxChange(index, event)}
-                  />
-                {editingIndex === index ? (
-                  <TextField
-                    fullWidth
-                    value={point}
-                    onChange={(e) => handlePointChange(index, e.target.value)}
-                    onClick={() => handlePointClick(index)}
-                    onKeyDown={(e) => handlePointKeyDown(index, e)}
-                    onBlur={handlePointBlur}
-                    autoFocus
-                  />
-                  ) : (
-                    <Typography variant="body1" onClick={() => handlePointClick(index)}>
-                    {point}
-                  </Typography>
-                )}
-              </div>
-            ))}
-          </CardContent>
+          <TaskPoints task={task} taskFuncs={taskFuncs} setTaskCompleted={changeCheckboxTo}/>
         </Collapse>
-        )
       }
     </>
   );
