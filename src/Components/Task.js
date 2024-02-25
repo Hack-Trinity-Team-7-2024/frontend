@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, CardContent, CardActions, Typography, IconButton, Checkbox, Skeleton } from '@mui/material';
+import { useState } from 'react';
+import { Card, CardContent, CardActions, Typography, IconButton, Checkbox, Skeleton, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -44,10 +44,11 @@ const expandButtonStyle = {
 const titleContainerStyle = {
   display: 'flex',
   alignItems: 'center',
+  flexWrap: 'wrap'
 };
 
 const titleStyle = {
-  marginLeft: '8px',
+  marginLeft: '8px'
 };
 
 // this approach needed so that the skeleton and real task share the same card
@@ -78,9 +79,10 @@ export const SkeletonTask = () => {
 };
 
 const Task = ({ task, taskFuncs }) => {
-  const [expanded, setExpanded] = React.useState(false);
-  const [completed, setCompleted] = React.useState(task.completed);
+  const [expanded, setExpanded] = useState(false);
+  const [completed, setCompleted] = useState(task.completed);
 
+  const [refinementText, setRefinementText] = useState();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -105,6 +107,13 @@ const Task = ({ task, taskFuncs }) => {
     changeCheckboxTo(event.target.checked);
   };
 
+  const handleRefinementSubmit = (event) => {
+    event.preventDefault();
+    task.points = task.points.length;
+    setRefinementText('');
+    taskFuncs.refineTask(task, refinementText);
+  }
+
   const formattedTime = new Date(task.time/1000000).toLocaleString('en-GB', {
     day: '2-digit',
     month: '2-digit',
@@ -119,18 +128,21 @@ const Task = ({ task, taskFuncs }) => {
 
   return (
     <>
-      <CardContent>
+      <CardContent className='main-content'>
         <div style={titleContainerStyle}>
-          <Checkbox
-            checked={completed}
-            onChange={handleCheckboxChange}
-            inputProps={{ 'aria-label': 'completed checkbox' }}
-          />
-          <Editable initialText={task.title} saveText={(t) => editableUpdateTask('title', t)} typographyProps={{
-            variant: "h5",
-            component: "div",
-            style:{...titleStyle, textDecoration: completed ? 'line-through' : 'none'}
-            }} />
+          <div style={{display: 'flex'}}>
+            <Checkbox
+              checked={completed}
+              onChange={handleCheckboxChange}
+              inputProps={{ 'aria-label': 'completed checkbox' }}
+              />
+            <Editable initialText={task.title} saveText={(t) => editableUpdateTask('title', t)} typographyProps={{
+              variant: "h5",
+              component: "div",
+              style:{...titleStyle, textDecoration: completed ? 'line-through' : 'none'}
+              }}
+            />
+          </div>
           <Typography variant="caption" color="text.secondary" flexGrow="1" textAlign="right" whiteSpace="noWrap" marginRight="2px">
             {formattedTime}
           </Typography>
@@ -141,7 +153,7 @@ const Task = ({ task, taskFuncs }) => {
           style: { paddingTop: '5px', paddingLeft: '15px' }
           }} />
       </CardContent>
-      <CardActions style={{ justifyContent: 'flex-end', padding: '8px 16px' }}>
+      <CardActions style={{ justifyContent: 'flex-end', padding: 0 }}>
         <IconButton
           aria-label="delete"
           onClick={handleDeleteClick}
@@ -174,8 +186,25 @@ const Task = ({ task, taskFuncs }) => {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
         {
-          task.points
-          ? <TaskPoints task={task} taskFuncs={taskFuncs} setTaskCompleted={changeCheckboxTo}/>
+          typeof task.points === 'number' ?
+            <SkeletonTaskPoints length={task.points}/>
+          : 
+            task.points ? (
+              <>
+                <TaskPoints task={task} taskFuncs={taskFuncs} setTaskCompleted={changeCheckboxTo}/>
+
+                <form onSubmit={handleRefinementSubmit} autoComplete='off' style={{paddingTop: '1em'}}>
+                  <TextField
+                    label='Refine subtasks'
+                    placeholder='Enter a refinement'
+                    fullWidth
+                    size='small'
+                    value={refinementText}
+                    onChange={(e) => {setRefinementText(e.target.value);}}
+                  />
+                </form>
+              </>
+            )
           : <SkeletonTaskPoints/>
         }
         </CardContent>
