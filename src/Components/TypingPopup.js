@@ -22,7 +22,7 @@ const TypingPopup = ({ addTask }) => {
       <TextField
         id='outlined-textarea'
         label='New Task'
-        placeholder='Start Typing!'
+        placeholder='Enter a task'
         // multiline
         autoFocus
         variant='outlined'

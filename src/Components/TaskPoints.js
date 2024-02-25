@@ -2,8 +2,8 @@ import { Checkbox, Skeleton, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 
 
-export const SkeletonTaskPoints = () => {
-  return Array.from({ length: 2 }, (_) => (
+export const SkeletonTaskPoints = ({ length=2 }) => {
+  return Array.from({ length }, (_) => (
       <div style={{ display: 'flex', alignItems: 'center'}}>
         <Checkbox checked={false}></Checkbox>
           <Typography variant="body1" width='100%'>

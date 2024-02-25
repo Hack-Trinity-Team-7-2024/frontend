@@ -24,9 +24,9 @@ const Home = () => {
       id: dummyId.current,
       dummy: true
     }
-    console.log(dummyTask, dummyId.current)
+    // console.log(dummyTask, dummyId.current)
     dummyId.current -= 1; // negative and decrement to not collide with real task ids
-    console.log(dummyTask, dummyId.current)
+    // console.log(dummyTask, dummyId.current)
     setTasks([dummyTask, ...tasks]); // add to the head of tasks
 
     let task = {
@@ -102,12 +102,34 @@ const Home = () => {
       });
   }
   
+  const refineTask = (taskToRefine, refineText) => {
+    fetch(`/api/tasks/recreate/${taskToRefine.id}`,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: refineText })
+      }
+    ).then((r) => r.json()).then(j => {
+        console.log('taskrecreate', j);
+        setTasks((cur) => cur.map(t => {
+          if (t !== taskToRefine) { return t; } // if not this task, don't modify
+          return {
+            ...t, // task before recreate
+            ...j // results of the recreate
+          }
+        }));
+      });
+  }
+  
   return (
     <> 
       <ClippedDrawer drawerWidth={drawerWidth} addTask={addTask} />
       <div  style={{marginLeft: drawerWidth}}>
         <div className='typing-popup-container flex-col-centered'>
-            <TaskList tasks={tasks} taskFuncs={{addTask, deleteTask, patchTask, breakdownTask}}/>
+            <TaskList tasks={tasks} taskFuncs={{addTask, deleteTask, patchTask, breakdownTask, refineTask}}/>
         </div>
       </div>
     </>
