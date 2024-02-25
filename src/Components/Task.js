@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import '../Styles/Task.css'
 import { SkeletonTaskPoints, TaskPoints } from './TaskPoints';
+import { Editable } from './Editable';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -112,6 +113,10 @@ const Task = ({ task, taskFuncs }) => {
     minute: '2-digit'
   });
 
+  const editableUpdateTask = (prop, val) => {
+    taskFuncs.patchTask(task, {[prop]: val})
+  }
+
   return (
     <>
       <CardContent>
@@ -121,16 +126,20 @@ const Task = ({ task, taskFuncs }) => {
             onChange={handleCheckboxChange}
             inputProps={{ 'aria-label': 'completed checkbox' }}
           />
-          <Typography variant="h5" component="div" style={{...titleStyle, textDecoration: completed ? 'line-through' : 'none'}}>
-            {task.title}
-          </Typography>
+          <Editable initialText={task.title} saveText={(t) => editableUpdateTask('title', t)} typographyProps={{
+            variant: "h5",
+            component: "div",
+            style:{...titleStyle, textDecoration: completed ? 'line-through' : 'none'}
+            }} />
           <Typography variant="caption" color="text.secondary" flexGrow="1" textAlign="right" whiteSpace="noWrap" marginRight="2px">
             {formattedTime}
           </Typography>
         </div>
-        <Typography variant="body1" color="text.secondary" style={{ paddingTop: '5px', paddingLeft: '15px' }}>
-          {task.description}
-        </Typography>
+        <Editable initialText={task.description} saveText={(t) => editableUpdateTask('description', t)} typographyProps={{
+          variant: "body1",
+          color: "text.secondary",
+          style: { paddingTop: '5px', paddingLeft: '15px' }
+          }} />
       </CardContent>
       <CardActions style={{ justifyContent: 'flex-end', padding: '8px 16px' }}>
         <IconButton
