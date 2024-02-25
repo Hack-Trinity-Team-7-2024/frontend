@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import TaskList from '../Components/TaskList';
 import ClippedDrawer from '../Components/ClippedDrawer';
 import { Typography } from '@mui/material';
+import LogoNoText from '../Components/LogoNoText';
 
 const drawerWidth = 180;
 
@@ -150,7 +151,10 @@ const Home = () => {
           : <div>
               <Typography variant='h4' color="text.secondary" style={{ paddingTop: '50px'}}>No tasks left!</Typography>
               <Typography variant='body1' color="text.secondary" style={{ paddingTop: '5px'}}>Type in the text bar above to add a task.</Typography>
-            </div>
+			  <div style={{paddingTop: '100px'}}>
+				<LogoNoText/>
+              </div>
+			</div>
         }
         </div>
       </div>
