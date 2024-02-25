@@ -117,7 +117,7 @@ const Home = () => {
   }
 
   const refineTask = (taskToRefine, refineText) => {
-    fetch(`/api/tasks/recreate/${taskToRefine.id}`,
+    fetch(`/api/tasks/recreatecontext/${taskToRefine.id}`,
       {
         method: 'POST',
         headers: {
